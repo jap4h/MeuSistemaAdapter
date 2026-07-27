@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class App{
-    static Scanner sc = new Scanner(System.in);
+    private static Scanner sc = new Scanner(System.in);
     static ArrayList<ContaBancaria> contas = new ArrayList<>();
 
     // Cadastrar conta
-    public static  void cadastroConta(){
+    private static void cadastroConta(){
         System.out.println("Digite o nome do titular: ");
         String nomeTitular = sc.nextLine();
         System.out.println("Digite o numero da conta: ");
@@ -19,7 +19,7 @@ public class App{
         contas.add(criaConta); 
     }
 
-    public static  void depositar(){
+    static void depositar(){
         System.out.println("Digite o valor do deposito: ");
         double valor = sc.nextDouble();
         System.out.println("Digite o numero da conta sua conta: ");
@@ -28,7 +28,7 @@ public class App{
        Adapters.adapterDeposito(numConta , valor);
     }
 
-    public static  void enviarPIX(){
+    static void enviarPIX(){
         System.out.println("Digite o numero da sua conta: ");
         BigInteger numConta = sc.nextBigInteger();
         sc.nextLine();
@@ -48,7 +48,7 @@ public class App{
         }
     }
 
-    public static void Menu(){
+    static void Menu(){
         int pergunta = -1;
         while(pergunta != 0 ){
             System.out.println("Menu: \n 1 - Cadastrar conta \n2 - Depositar \n 3 - Enviar PIX \n4 - Mostra conta\n 0 - Sair");
@@ -57,6 +57,7 @@ public class App{
             switch(pergunta){
                 case 0 :
                     System.out.println("Encerrando...");
+                    break;
 
                 case 1 :
                     cadastroConta();
@@ -83,7 +84,7 @@ public class App{
         }
     }
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         Menu();
     }
 

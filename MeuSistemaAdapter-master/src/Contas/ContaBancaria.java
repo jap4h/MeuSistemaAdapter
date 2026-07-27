@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class ContaBancaria {
-    String titular;
-    BigInteger numeroConta;
-    BigDecimal saldo = new BigDecimal(0);
+    private String titular;
+    private BigInteger numeroConta;
+    private BigDecimal saldo = new BigDecimal(0);
 
     public ContaBancaria(String titular , BigInteger numeroConta ){
         setTitular(titular);
@@ -17,7 +17,6 @@ public class ContaBancaria {
     public void depositar(BigDecimal valor){
         this.saldo = this.saldo.add(valor);
     }   
-    
 
     public String getTitular() {
         return titular;
@@ -42,6 +41,5 @@ public class ContaBancaria {
     public void setSaldo(BigDecimal saldo) {
         this.saldo = saldo;
     }
-
-
+    
 }
