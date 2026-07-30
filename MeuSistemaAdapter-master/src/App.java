@@ -1,91 +1,94 @@
-
-import Contas.ContaBancaria;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class App{
-    private static Scanner sc = new Scanner(System.in);
+public class App {
+
+    static Scanner sc = new Scanner(System.in);
     static ArrayList<ContaBancaria> contas = new ArrayList<>();
 
-    // Cadastrar conta
-    private static void cadastroConta(){
-        System.out.println("Digite o nome do titular: ");
-        String nomeTitular = sc.nextLine();
-        System.out.println("Digite o numero da conta: ");
-        BigInteger numeroConta = sc.nextBigInteger();
-        sc.nextLine();
-        ContaBancaria criaConta = new ContaBancaria(nomeTitular, numeroConta);
-        contas.add(criaConta); 
-    }
+    public static void main(String[] args) {
 
-    static void depositar(){
-        System.out.println("Digite o valor do deposito: ");
-        double valor = sc.nextDouble();
-        System.out.println("Digite o numero da conta sua conta: ");
-        BigInteger numConta = sc.nextBigInteger();
-        sc.nextLine();
-       Adapters.adapterDeposito(numConta , valor);
-    }
+        int opcao;
+        do {
+            System.out.println("\n===== BANCO =====");
+            System.out.println("1 - Criar Conta");
+            System.out.println("2 - Depositar");
+            System.out.println("3 - PIX");
+            System.out.println("4 - Listar Contas");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha: ");
+            opcao = sc.nextInt();
 
-    static void enviarPIX(){
-        System.out.println("Digite o numero da sua conta: ");
-        BigInteger numConta = sc.nextBigInteger();
-        sc.nextLine();
-        for(ContaBancaria c : contas ){
-            if(c.getNumeroConta().equals(numConta)){
-                System.out.println("Numero da conta de envio do pix: ");
-                BigInteger numContaEnvio = sc.nextBigInteger();
-                sc.nextLine();
-                for(ContaBancaria cc : contas){
-                    if(cc.getNumeroConta().equals(numContaEnvio)){
-                        System.out.println("Digite o valor do pix: ");
-                        double valorEnvio = sc.nextDouble();
-                        Adapters.adapterEnvioPIX(c, cc, valorEnvio);
-                    }
-                }
-            }
-        }
-    }
+            switch (opcao) {
 
-    static void Menu(){
-        int pergunta = -1;
-        while(pergunta != 0 ){
-            System.out.println("Menu: \n 1 - Cadastrar conta \n2 - Depositar \n 3 - Enviar PIX \n4 - Mostra conta\n 0 - Sair");
-            pergunta = sc.nextInt();
-            sc.nextLine();
-            switch(pergunta){
-                case 0 :
-                    System.out.println("Encerrando...");
+                case 1:
+                    criarConta();
                     break;
 
-                case 1 :
-                    cadastroConta();
-                    break;
-
-                case 2 :
+                case 2:
                     depositar();
                     break;
 
                 case 3:
-                    enviarPIX();
+                    pix();
                     break;
 
                 case 4:
-                    System.out.println("Digite o numero da sua conta: ");
-                    BigInteger numConta = sc.nextBigInteger();
-                    for(ContaBancaria c : contas){
-                        if(c.getNumeroConta().equals(numConta)){
-                            System.out.println("Titular " + c.getTitular() + "\nNumero da conta " + c.getNumeroConta() + "\nSaldo " + c.getSaldo());
-                        }
-                    }
+                    listarContas();
                     break;
+
+                case 0:
+                    System.out.println("Encerrando...");
+                    break;
+
+                default:
+                    System.out.println("Opção inválida.");
+
             }
+        } while (opcao != 0);
+    }
+
+    static void criarConta() {
+
+        sc.nextLine();
+        System.out.print("Titular: ");
+        String nome = sc.nextLine();
+        ContaBancaria conta = new ContaBancaria(nome, 0);
+        contas.add(conta);
+        System.out.println("Conta criada!");
+    }
+
+    static void listarContas() {
+
+        for (int cont = 0; cont < contas.size(); cont++) {
+
+            ContaBancaria c = contas.get(cont);
+            System.out.println(cont + " - " + c.getTitular() + " | Saldo: R$ " + c.getSaldo());
         }
     }
 
-    static void main(String[] args) {
-        Menu();
+    static void depositar() {
+
+        listarContas();
+        System.out.print("Conta: ");
+        int indice = sc.nextInt();
+        System.out.print("Valor: ");
+        double valor = sc.nextDouble();
+        SistemaPagamento sistema = new ContaAdapter(contas.get(indice));
+        sistema.realizarDeposito(valor);
+    }
+
+    static void pix() {
+        listarContas();
+        System.out.print("Conta origem: ");
+        int origem = sc.nextInt();
+        System.out.print("Conta destino: ");
+        int destino = sc.nextInt();
+        System.out.print("Valor: ");
+        double valor = sc.nextDouble();
+        SistemaPagamento sistema = new ContaAdapter(contas.get(origem));
+        sistema.realizarPix(valor, contas.get(destino));
+
     }
 
 }
